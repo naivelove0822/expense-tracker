@@ -3,6 +3,7 @@ const app = express()
 const port = 3000
 const Expense = require('./models/record')
 const bodyParser = require('body-parser')
+const methodOverride = require('method-override')
 const mongoose = require('mongoose')
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/tracker-list', { useNewUrlParser: true, useUnifiedTopology: true })
 
@@ -22,7 +23,7 @@ app.engine('hbs', exphbs({ defaultLayout: 'main', extname: '.hbs' }))
 app.set('view engine', 'hbs')
 
 app.use(bodyParser.urlencoded({ extende: true }))
-
+app.use(methodOverride('_method'))
 
 app.get('/', (req, res) => {
   Expense.find()
@@ -56,7 +57,7 @@ app.get('/expense/:id/edit', (req, res) => {
     .catch(err => console.log(err))
 })
 
-app.post('/expense/:id/edit', (req, res) => {
+app.put('/expense/:id', (req, res) => {
   const id = req.params.id
   const { name, date, amount } = req.body
   return Expense.findById(id)
@@ -73,7 +74,7 @@ app.post('/expense/:id/edit', (req, res) => {
 
 
 //method未改
-app.get('/expense/:id/delete', (req, res) => {
+app.delete('/expense/:id', (req, res) => {
   const id = req.params.id
   return Expense.findById(id)
     .then(expense => expense.remove())
