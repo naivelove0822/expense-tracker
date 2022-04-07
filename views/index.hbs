@@ -1,15 +1,28 @@
 <div class="col-8 mx-auto">
+  <form action="/" method="post">
+    <select class="col-sm form-select mb-3" aria-label="Default select example" onchange="this.form.submit()"
+      name="selectedCategoryId">
 
-  <div class="form-group">
-    <select class="col-sm form-select mb-3" name="select" id="select">
-      <option value="0">類別</option>
-      <option value="1">家居物業</option>
-      <option value="2">交通出行</option>
-      <option value="3">休閒娛樂</option>
-      <option value="4">餐飲食品</option>
-      <option value="5">其他</option>
+      {{#if selectedCategory}}
+      <option value="{{selectedCategory_id}}" selected>{{selectedCategory.name}}</option>
+      <option value="">類別</option>
+      {{#each categorys}}
+      <option value="{{this._id}}">{{this.name}}</option>
+      {{/each}}
+      {{else}}
+      <option value=""> 類別 </option>
+      {{#each categorys}}
+      <option value="{{this._id}}" name="categoryname">{{this.name}}</option>
+      {{/each}}
+      {{/if}}
     </select>
-  </div>
+  </form>
+</div>
+
+
+
+
+
 
 <table class="table table-striped table-hover">
   <thead>
@@ -17,31 +30,31 @@
   </thead>
   <tbody>
 
-  <div class="group-list mt-5">
-    {{#each expenses}}
-    <div class="container mt-4">
-      <div class="row">
-        <div class="col-2 d-flex align-items-center">
-          <i class="fa-solid fa-house"></i>
-        </div>
-        <div class='col-6 ps-3 py-2'>
-          <div class='col fs-3'>{{this.name}}</div>
-          <div class='col'>{{this.date}}</div>
-        </div>
-        <div class="col-2 d-flex align-items-center">
-          {{this.amount}}
-        </div>
-        <div class="col-2 d-flex align-items-center">
-          <a href="./expense/{{ this._id }}/edit" class="btn btn-warning">Edit</a>
-          <form action="./expense/{{ this._id }}?_method=DELETE" method="POST" style="display: inline;"><button type="submit"
-              class="btn btn-danger">Delete</button></form>
+    <div class="group-list mt-5">
+      {{#each expenses}}
+      <div class="container mt-4">
+        <div class="row">
+          <div class="col-2 d-flex align-items-center">
+            <i class="{{this.categoryId.icon}}"></i>
+          </div>
+          <div class='col-6 ps-3 py-2'>
+            <div class='col fs-3'>{{this.name}}</div>
+            <div class='col'>{{this.date}}</div>
+          </div>
+          <div class="col-2 d-flex align-items-center">
+            {{this.amount}}
+          </div>
+          <div class="col-2 d-flex align-items-center">
+            <a href="./expense/{{ this._id }}/edit" class="btn btn-warning">Edit</a>
+            <form action="./expense/{{ this._id }}?_method=DELETE" method="POST" style="display: inline;"><button
+                type="submit" class="btn btn-danger">Delete</button></form>
+          </div>
         </div>
       </div>
+      {{/each}}
     </div>
-    {{/each}}
-  </div>
-  <div class="col-3 mx-auto mt-5">
-    <a href="./expense/new" class="btn btn-dark" style="width: 200px; background-color: #FD6A02;">新增支出</a>
-  </div>
+    <div class="col-3 mx-auto mt-5">
+      <a href="./expense/new" class="btn btn-dark" style="width: 200px; background-color: #FD6A02;">新增支出</a>
+    </div>
 
-</div>
+    </div>
