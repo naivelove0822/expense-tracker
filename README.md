@@ -1,11 +1,15 @@
 # 記帳程式
 
-![Index page about Restaurant List](./public/image/廣志.png)
+![Index page about Restaurant List](./public/image/Papa.png)
 
 ## 介紹
 
 拔拔的私房錢
 
+若有使用Seed，提供兩組試用帳號
+
+1. user1@example.com / 12345678
+2. user2@example.com / 12345678
 
 ## 功能
 - 新增費用
