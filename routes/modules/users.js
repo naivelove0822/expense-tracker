@@ -39,7 +39,7 @@ router.post('/register', (req, res) => {
   User.findOne({ email })
     .then(user => {
       if (user) {
-        errors.push({ message: '這個信箱已經註冊過了'})
+        req.flash('warning_msg', 'Email已經註冊過了')
         res.render('register', {
           name,
           email,
