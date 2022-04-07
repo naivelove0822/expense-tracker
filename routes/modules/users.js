@@ -9,6 +9,7 @@ router.get('/login', (req, res) => {
 
 router.post('/login', passport.authenticate('local', {
   successRedirect: '/',
+  failureFlash: true,
   failureRedirect: '/users/login'
 }))
 
@@ -18,7 +19,22 @@ router.get('/register', (req, res) => {
 
 router.post('/register', (req, res) => {
   const { name, email, password, confirmPassword } = req.body
-
+  const errors = []
+  if (!email || !password || !confirmPassword) {
+    errors.push({ message: '除了名字外都是必填'})
+  }
+  if (password !== confirmPassword) {
+    errors.push({ message: '密碼與確認密碼不符' })
+  }
+  if (errors.length) {
+    return res.render('register', {
+      errors,
+      name,
+      email,
+      password,
+      confirmPassword
+    })
+  }
   User.findOne({ email })
     .then(user => {
       if (user) {
@@ -44,6 +60,7 @@ router.post('/register', (req, res) => {
 
 router.get('/logout', (req, res) => {
   req.logout()
+  req.flash('succee_msg', '你已經成功登出')
   res.redirect('/users/login')
 })
 
