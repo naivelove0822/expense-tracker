@@ -13,11 +13,12 @@ router.get('/new', (req, res) => {
 })
 
 router.post('/new', (req, res) => {
+  const userId = req.user._id
   const { name, date, amount, category } = req.body
   Category.findOne({ _id: category })
     .lean()
     .then(() => {
-      return Expense.create({ name, date, amount, categoryId: category })
+      return Expense.create({ userId, name, date, amount, categoryId: category })
         .then(() => res.redirect('/'))
         .catch(err => console.log(err))
     })
@@ -25,8 +26,8 @@ router.post('/new', (req, res) => {
 
 router.get('/:id/edit', (req, res) => {
   const _id = req.params.id
-
-  Expense.findOne({ _id })
+  const userId = req.user._id
+  Expense.findOne({ _id, userId })
     .populate('categoryId')
     .lean()
     .then(expense => {
@@ -43,9 +44,10 @@ router.get('/:id/edit', (req, res) => {
 router.put('/:id', (req, res) => {
   const editedRecord = req.body
   const _id = req.params.id
+  const userId = req.user._id
 
 //利用object.assign去實現複製並覆蓋
-  return Expense.findOne({ _id })
+  return Expense.findOne({ _id, userId })
     .then(expense => {
       expense = Object.assign(expense, editedRecord)
       return expense.save()
@@ -56,8 +58,9 @@ router.put('/:id', (req, res) => {
 })
 
 router.delete('/:id', (req, res) => {
-  const id = req.params.id
-  return Expense.findById(id)
+  const userId = req.user._id
+  const _id = req.params.id
+  return Expense.findOne({ _id, userId })
     .then(expense => expense.remove())
     .then(() => res.redirect('/'))
     .catch(err => console.log(err))

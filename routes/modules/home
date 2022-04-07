@@ -5,10 +5,11 @@ const Expense = require('../../models/record')
 const Category = require('../../models/category')
 
 router.get('/', (req, res) => {
+  const userId = req.user._id
   Category.find()
     .lean()
     .then(categorys => {
-      Expense.find()
+      Expense.find({ userId })
         .populate('categoryId')
         .lean()
         .sort({ data: 'asc' })
@@ -25,7 +26,7 @@ router.get('/', (req, res) => {
 
 router.post('/', (req, res) => {
   const { selectedCategoryId } = req.body
-
+  const userId = req.user._id
   if (selectedCategoryId) {
     Category.find({ _id: { $ne: selectedCategoryId } }) //排除該選項id 
       .lean()
@@ -33,7 +34,7 @@ router.post('/', (req, res) => {
         Category.findById(selectedCategoryId)
           .lean()
           .then(selectedCategory => {
-            return Expense.find({ categoryId: selectedCategoryId })
+            return Expense.find({ userId, categoryId: selectedCategoryId })
               .populate('categoryId')
               .lean()
               .then(expenses => {
