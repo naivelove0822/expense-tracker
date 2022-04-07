@@ -2,10 +2,13 @@ const express = require('express')
 const session = require('express-session')
 const exphbs = require('express-handlebars')
 const usePassport = require('./config/passport')
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config()
+}
 
 const app = express()
 const routes = require('./routes')
-const port = 3000
+const PORT = process.env.PORT || 3000
 
 const bodyParser = require('body-parser')
 const methodOverride = require('method-override')
@@ -17,7 +20,7 @@ app.engine('hbs', exphbs({ defaultLayout: 'main', extname: '.hbs' }))
 app.set('view engine', 'hbs')
 
 app.use(session({
-  secret: 'expenseTracker',
+  secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: true
 }))
@@ -42,6 +45,6 @@ app.use(routes)
 
 require('./config/mongoose')
 
-app.listen(port, () => {
-  console.log(`The tracker is on the http://localhost:${port}`)
+app.listen(PORT, () => {
+  console.log(`The tracker is on the http://localhost:${PORT}`)
 })
