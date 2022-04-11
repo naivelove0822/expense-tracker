@@ -15,7 +15,7 @@ router.get('/', (req, res) => {
         .sort({ data: 'asc' })
         .then((expenses => {
           let totalAmount = 0
-          expenses.map(expense => {
+          expenses.forEach(expense => {
             totalAmount += Number(expense.amount)
           })
           return res.render('index', { expenses, totalAmount, categorys })
@@ -24,16 +24,17 @@ router.get('/', (req, res) => {
     })
 })
 
+
 router.post('/', (req, res) => {
   const { selectedCategoryId } = req.body
   const userId = req.user._id
   if (selectedCategoryId) {
-    Category.find({ _id: { $ne: selectedCategoryId } }) //排除該選項id 
+    Category.find({}) //排除該選項id 
       .lean()
       .then(elseSelectedCategory => {
         Category.findById(selectedCategoryId)
           .lean()
-          .then(selectedCategory => {
+          .then(SelectedCategory => {
             return Expense.find({ userId, categoryId: selectedCategoryId })
               .populate('categoryId')
               .lean()
@@ -42,7 +43,7 @@ router.post('/', (req, res) => {
                 expenses.map(expense => {
                   totalAmount += Number(expense.amount)
                 })
-                res.render('index', { expenses, totalAmount, selectedCategory, categorys: elseSelectedCategory })
+                res.render('index', { expenses, totalAmount, SelectedCategory, categorys: elseSelectedCategory })
               })
           })
       })

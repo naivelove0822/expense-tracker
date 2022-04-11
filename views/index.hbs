@@ -3,11 +3,12 @@
     <select class="col-sm form-select mb-3" aria-label="Default select example" onchange="this.form.submit()"
       name="selectedCategoryId">
 
-      {{#if selectedCategory}}
-      <option value="{{selectedCategory_id}}" selected>{{selectedCategory.name}}</option>
-      <option value="">類別</option>
+
+
+      {{#if SelectedCategory}}
+      <option value=""> 類別 </option>
       {{#each categorys}}
-      <option value="{{this._id}}">{{this.name}}</option>
+      <option value="{{this._id}}" name="categoryname">{{this.name}}</option>
       {{/each}}
       {{else}}
       <option value=""> 類別 </option>
@@ -45,9 +46,12 @@
             {{this.amount}}
           </div>
           <div class="col-2 d-flex align-items-center">
-            <a href="./expense/{{ this._id }}/edit" class="btn btn-warning">Edit</a>
+            <a href="./expense/{{ this._id }}/edit" class="btn btn-warning" style="margin-right: 10px;">Edit</a>
+
+
+
             <form action="./expense/{{ this._id }}?_method=DELETE" method="POST" style="display: inline;"><button
-                type="submit" class="btn btn-danger">Delete</button></form>
+                type="submit" class="btn btn-danger ">Delete</button></form>
           </div>
         </div>
       </div>
@@ -57,4 +61,3 @@
       <a href="./expense/new" class="btn btn-dark" style="width: 200px; background-color: #FD6A02;">新增支出</a>
     </div>
     </div>
-    
