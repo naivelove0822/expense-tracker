@@ -6,9 +6,9 @@
 
 
       {{#if SelectedCategory}}
-      <option value=""> 類別 </option>
-      {{#each categorys}}
-      <option value="{{this._id}}" name="categoryname">{{this.name}}</option>
+      <option value="{{SelectedCategory_id}}" name="categoryname">{{SelectedCategory.name}}</option>
+        {{#each categorys}}
+        <option value="{{this._id}}" name="categoryname">{{this.name}}</option>
       {{/each}}
       {{else}}
       <option value=""> 類別 </option>
