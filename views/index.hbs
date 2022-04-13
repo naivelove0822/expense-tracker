@@ -2,14 +2,15 @@
   <form action="/" method="post">
     <select class="col-sm form-select mb-3" aria-label="Default select example" onchange="this.form.submit()"
       name="selectedCategoryId">
-
-
-
+  
+  
+  
       {{#if SelectedCategory}}
-      <option value="{{SelectedCategory_id}}" name="categoryname">{{SelectedCategory.name}}</option>
-        {{#each categorys}}
-        <option value="{{this._id}}" name="categoryname">{{this.name}}</option>
+    <option value="{{SelectedCategory_id}}" name="categoryname">{{SelectedCategory.name}}</option>
+      {{#each categorys}}
+      <option value="{{this._id}}"name="categoryname">{{this.name}}</option>
       {{/each}}
+      <option value="" name="categoryname">返回全部</option>
       {{else}}
       <option value=""> 類別 </option>
       {{#each categorys}}
@@ -18,8 +19,6 @@
       {{/if}}
     </select>
   </form>
-</div>
-
 
 
 
