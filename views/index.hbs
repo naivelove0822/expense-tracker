@@ -38,7 +38,7 @@
 
 
               <form action="./expense/{{ this._id }}?_method=DELETE" method="POST" style="display: inline;"><button
-                  type="submit" class="btn btn-danger ">Delete</button></form>
+                  type="submit" class="btn btn-danger" onclick="return confirm(`確定要刪除 {{ this.name }} 嗎?`)">Delete</button></form>
             </div>
           </div>
         </div>
