@@ -4,52 +4,35 @@ const router = express.Router()
 const Expense = require('../../models/record')
 const Category = require('../../models/category')
 
-router.get('/', (req, res) => {
+
+router.get('/', async (req, res) => {
   const userId = req.user._id
-  Category.find()
-    .lean()
-    .then(categorys => {
-      Expense.find({ userId })
-        .populate('categoryId')
-        .lean()
-        .sort({ data: 'asc' })
-        .then((expenses => {
-          let totalAmount = 0
-          expenses.forEach(expense => {
-            totalAmount += Number(expense.amount)
-          })
-          return res.render('index', { expenses, totalAmount, categorys })
-        }))
-        .catch(err => console.log(err))
+  const { categoryId } = req.query
+  const categories = await Category.find().lean()
+  let expenses = []
+  let totalAmount = 0
+
+  if (categoryId) {
+    const category = categories.find(category => {
+      if (category._id.toString() === categoryId) {
+        category.selected = 'selected'
+        return category
+      }
     })
-})
-
-
-router.post('/', (req, res) => {
-  const { selectedCategoryId } = req.body
-  const userId = req.user._id
-  if (selectedCategoryId) {
-    Category.find({}) //排除該選項id 
+    expenses = await Expense.find({ userId, categoryId })
+      .populate('categoryId', { icon: 1 })
       .lean()
-      .then(elseSelectedCategory => {
-        Category.findById(selectedCategoryId)
-          .lean()
-          .then(SelectedCategory => {
-            return Expense.find({ userId, categoryId: selectedCategoryId })
-              .populate('categoryId')
-              .lean()
-              .then(expenses => {
-                let totalAmount = 0
-                expenses.map(expense => {
-                  totalAmount += Number(expense.amount)
-                })
-                res.render('index', { expenses, totalAmount, SelectedCategory, categorys: elseSelectedCategory })
-              })
-          })
-      })
+      .sort({ date: -1 })
   } else {
-    res.redirect('/')
+    expenses = await Expense.find({ userId })
+      .populate('categoryId', { icon: 1 })
+      .lean()
+      .sort({ date: -1 })
   }
+  expenses.forEach(expense => {
+    totalAmount += Number(expense.amount)
+  })
+  res.render('index', { expenses, categories, totalAmount })
 })
 
 module.exports = router
